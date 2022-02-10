@@ -1,0 +1,35 @@
+{
+    "name": "inventcorp/laravel-base-package",
+    "autoload": {
+        "psr-4": {
+            "Inventcorp\\LaravelBasePackage\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Inventcorp\\LaravelBasePackage\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dmitry Shubin",
+            "email": "d.shubin@sxope.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "google/cloud-logging": "^1.23"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Inventcorp\\LaravelBasePackage\\BasePackageServiceProvider"
+            ],
+            "aliases": {
+                "GoogleCloudLogger": "Inventcorp\\LaravelBasePackage\\GoogleCloudLogging\\GoogleCloudLogger"
+            }
+        }
+    },
+    "license": "MIT",
+    "version": "1.0.0"
+}
