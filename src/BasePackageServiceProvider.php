@@ -6,6 +6,8 @@ use Exception;
 use Google\Cloud\Logging\LoggingClient;
 use Illuminate\Support\ServiceProvider;
 use Inventcorp\LaravelBasePackage\GoogleCloudLogging\Logging\GoogleCloudLoggingService;
+use Inventcorp\LaravelBasePackage\GoogleCloudSecretManager\GoogleSecretManager;
+use Inventcorp\LaravelBasePackage\GoogleMaps\Service\GoogleMapsService;
 use Inventcorp\LaravelBasePackage\Helpers\AppHelper;
 
 class BasePackageServiceProvider extends ServiceProvider
@@ -25,10 +27,8 @@ class BasePackageServiceProvider extends ServiceProvider
             new LoggingClient(['projectId' => AppHelper::getProjectId()])
         ));
 
-        $this->app->bind('google-cloud-secret-manager', function () {
-            $client = new LoggingClient(['projectId' => AppHelper::getProjectId()]);
-            return new GoogleCloudLoggingService($client);
-        });
+        $this->app->bind('google-cloud-secret-manager', fn () => new GoogleSecretManager());
+        $this->app->bind('google-maps', fn () => new GoogleMapsService());
     }
 
     private function bindInterfaces(): void
