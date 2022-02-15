@@ -18,7 +18,9 @@
     ],
     "require": {
         "php": ">=7.4",
-        "google/cloud-logging": "^1.23"
+        "google/cloud-logging": "^1.23",
+        "google/cloud-secret-manager": "^1.7",
+        "ext-json": "*"
     },
     "extra": {
         "laravel": {

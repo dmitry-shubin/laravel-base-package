@@ -6,6 +6,7 @@ use Exception;
 use Google\Cloud\Logging\LoggingClient;
 use Illuminate\Support\ServiceProvider;
 use Inventcorp\LaravelBasePackage\GoogleCloudLogging\Logging\GoogleCloudLoggingService;
+use Inventcorp\LaravelBasePackage\Helpers\AppHelper;
 
 class BasePackageServiceProvider extends ServiceProvider
 {
@@ -20,7 +21,14 @@ class BasePackageServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerCloudLoggingFacade();
+        $this->app->bind('google-cloud-logger', fn () => new GoogleCloudLoggingService(
+            new LoggingClient(['projectId' => AppHelper::getProjectId()])
+        ));
+
+        $this->app->bind('google-cloud-secret-manager', function () {
+            $client = new LoggingClient(['projectId' => AppHelper::getProjectId()]);
+            return new GoogleCloudLoggingService($client);
+        });
     }
 
     private function bindInterfaces(): void
@@ -38,20 +46,5 @@ class BasePackageServiceProvider extends ServiceProvider
             ],
             'config'
         );
-    }
-
-    private function registerCloudLoggingFacade(): void
-    {
-        $this->app->bind('google-cloud-logger', function () {
-            if (is_null(config('base.projectKey'))) {
-                throw new Exception('Current google cloud project key is not present in .env');
-            }
-            if (is_null(config('base.projectId'))) {
-                throw new Exception('Current google cloud project id is not present in .env');
-            }
-
-            $client = new LoggingClient(['projectId' => config('app.project_id')]);
-            return new GoogleCloudLoggingService($client);
-        });
     }
 }
