@@ -17,26 +17,26 @@ class GoogleMapsService
      * @param string $toSearch
      * @return GooglePlace[]
      */
-    public function getAddressAutocomplete(string $toSearch, IGoogleMapsSession $googleMapsSession): array
+    public function getAddressAutocomplete(string $toSearch): array
     {
         return $this->callApi(
             config('base.google_maps.route_autocomplete'),
-            ['input' => $toSearch, 'sessiontoken' => $googleMapsSession->getToken()],
+            ['input' => $toSearch, 'sessiontoken' => app(IGoogleMapsSession::class)->getToken()],
             fn (array $content) => array_map(
                 fn (array $item) => new GooglePlace($item['place_id'], $item['description']),
-                $content['predictions']['data']
+                $content['predictions']
             )
         );
     }
 
-    public function getAddressDetails(string $placeId, IGoogleMapsSession $googleMapsSession): ?PlaceDetails
+    public function getAddressDetails(string $placeId): ?PlaceDetails
     {
-        $googleMapsSession->destroyToken();
+        app(IGoogleMapsSession::class)->destroyToken();
 
         return self::callApi(
             config('base.google_maps.route_details'),
             ['place_id' => $placeId],
-            fn ($info) => empty($info['result']) ? new PlaceDetails($info['result']) : null
+            fn ($info) => !empty($info['result']) ? new PlaceDetails($info['result']) : null
         );
     }
 
@@ -50,14 +50,19 @@ class GoogleMapsService
         return $this->callApi(
             config('base.google_maps.route_geocode'),
             ['address' => $toSearch],
-            fn ($result) => array_map(
-                fn ($item) => new GoogleGeoCode($item['place_id'], $item['lat'], $item['lat'], $item['address']),
-                $result
+            fn (array $result) => array_map(
+                fn (array $item) => new GoogleGeoCode(
+                    $item['place_id'],
+                    $item['geometry']['location']['lat'],
+                    $item['geometry']['location']['lng'],
+                    $item['formatted_address']
+                ),
+                    $result['results']
             )
         );
     }
 
-    public function getClient(): Client
+    private function getClient(): Client
     {
         if (!isset($this->client)) {
             $this->client = new Client();

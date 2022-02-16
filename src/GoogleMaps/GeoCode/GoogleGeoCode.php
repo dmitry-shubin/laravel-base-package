@@ -2,7 +2,9 @@
 
 namespace Inventcorp\LaravelBasePackage\GoogleMaps\GeoCode;
 
-class GoogleGeoCode
+use Illuminate\Contracts\Support\Arrayable;
+
+class GoogleGeoCode implements Arrayable
 {
     private string $placeId;
     private float $latitude;
@@ -47,5 +49,15 @@ class GoogleGeoCode
     public function getAddress(): string
     {
         return $this->address;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'place_id' => $this->getPlaceId(),
+            'address' => $this->getAddress(),
+            'latitude' => $this->getLatitude(),
+            'longitude' => $this->getLongitude(),
+        ];
     }
 }

@@ -9,8 +9,8 @@ class PlaceDetails
     private string $address;
     private float $latitude;
     private float $longitude;
-    private string $postalCode;
-    private string $postalCodeSuffix;
+    private ?string $postalCode = null;
+    private ?string $postalCodeSuffix = null;
     private State $state;
     private Market $market;
     private County $county;

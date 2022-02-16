@@ -1,12 +1,13 @@
 <?php
 
-
 return [
     'projectId' => env('GCLOUD_PROJECT_ID'),
     'projectKey' => env('GOOGLE_APPLICATION_CREDENTIALS'),
     'interfacesBinding' => [
         \Inventcorp\LaravelBasePackage\Interfaces\IErrorLogger::class =>
-            \Inventcorp\LaravelBasePackage\Tools\Loggers\NewRelicErrorLogger::class
+            \Inventcorp\LaravelBasePackage\Tools\Loggers\NewRelicErrorLogger::class,
+        \Inventcorp\LaravelBasePackage\GoogleMaps\Interfaces\IGoogleMapsSession::class =>
+            \Inventcorp\LaravelBasePackage\Tools\GoogleMapsSession::class,
     ],
 
     'google_maps' => [
@@ -14,6 +15,6 @@ return [
         'api_key_restricted' => env('GOOGLE_MAPS_API_RESTRICTED'),
         'route_autocomplete' => 'https://maps.googleapis.com/maps/api/place/autocomplete/json',
         'route_details' => 'https://maps.googleapis.com/maps/api/place/details/json',
-        'route_details' => 'https://maps.googleapis.com/maps/api/geocode/json',
+        'route_geocode' => 'https://maps.googleapis.com/maps/api/geocode/json',
     ],
 ];
