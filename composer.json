@@ -16,6 +16,8 @@
             "email": "d.shubin@sxope.com"
         }
     ],
+    "repositories": [
+    ],
     "require": {
         "php": ">=7.4",
         "google/cloud-logging": "^1.23",

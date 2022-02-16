@@ -16,6 +16,7 @@ class BasePackageServiceProvider extends ServiceProvider
     {
         $this->loadConfig();
         $this->bindInterfaces();
+        $this->loadRoutesFrom(__DIR__.'/routes/health.php');
     }
 
     /**
